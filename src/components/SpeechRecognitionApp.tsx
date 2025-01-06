@@ -18,12 +18,11 @@ export default function SpeechRecognitionApp() {
         window.SpeechRecognition || window.webkitSpeechRecognition;
       const recognitionInstance = new SpeechRecognition();
       recognitionInstance.continuous = true;
-      recognitionInstance.interimResults = true;
+      recognitionInstance.interimResults = false;
       recognitionInstance.lang = 'ru-RU';
 
       recognitionInstance.onresult = (event) => {
         const transcript = Array.from(event.results)
-          .filter((result) => result.isFinal)
           .map((result) => result[0].transcript)
           .join('');
 
