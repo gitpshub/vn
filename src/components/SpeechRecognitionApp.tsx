@@ -18,7 +18,7 @@ export default function SpeechRecognitionApp() {
         window.SpeechRecognition || window.webkitSpeechRecognition;
       const recognitionInstance = new SpeechRecognition();
       recognitionInstance.continuous = true;
-      recognitionInstance.interimResults = false;
+      recognitionInstance.interimResults = true;
       recognitionInstance.lang = 'ru-RU';
 
       recognitionInstance.onresult = (event) => {
@@ -79,7 +79,7 @@ export default function SpeechRecognitionApp() {
     <div className={styles.container}>
       <textarea
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        // onChange={(e) => setText(e.target.value)}
         placeholder='Dictated text will appear here'
         className={`${styles.textarea} ${isListening ? styles.listening : ''}`}
       />
