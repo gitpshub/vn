@@ -13,6 +13,7 @@ export default function SpeechRecognitionApp() {
       const recognitionInstance = new SpeechRecognition()
       recognitionInstance.continuous = true
       recognitionInstance.interimResults = true
+      recognitionInstance.lang = 'ru-RU';
 
       recognitionInstance.onresult = (event) => {
         const transcript = Array.from(event.results)
