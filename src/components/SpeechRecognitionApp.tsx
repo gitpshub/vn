@@ -22,10 +22,15 @@ export default function SpeechRecognitionApp() {
       recognitionInstance.lang = 'ru-RU';
 
       recognitionInstance.onresult = (event) => {
-        const transcript = Array.from(event.results)
-          .map((result) => result[0].transcript)
-          .join('');
+        // const transcript = Array.from(event.results)
+        //   .map((result) => result[0].transcript)
+        //   .join('');
 
+
+        if (event.results.length == 0) {
+          return        
+        }
+        const transcript = event.results[0][0].transcript;
         setText(transcript);
       };
 
