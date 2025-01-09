@@ -27,10 +27,27 @@ export default function SpeechRecognitionApp() {
         //   .join('');
 
 
-        if (event.results.length == 0) {
-          return        
+        // if (event.results.length == 0) {
+        //   return        
+        // }
+        // const transcript = event.results[0][0].transcript;
+
+        let transcript = '';
+        let interim_transcript = '';
+
+        if (typeof(event.results) == 'undefined') {
+          return;
         }
-        const transcript = event.results[0][0].transcript;
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            transcript = event.results[i][0].transcript;
+          } else {
+            interim_transcript = interim_transcript + event.results[i][0].transcript;
+          }
+        }
+        if (transcript == '') {
+          transcript = interim_transcript;
+        }
         setText(transcript);
       };
 
@@ -84,7 +101,7 @@ export default function SpeechRecognitionApp() {
     <div className={styles.container}>
       <textarea
         value={text}
-        // onChange={(e) => setText(e.target.value)}
+        onChange={(e) => setText(e.target.value)}
         placeholder='Dictated text will appear here'
         className={`${styles.textarea} ${isListening ? styles.listening : ''}`}
       />
