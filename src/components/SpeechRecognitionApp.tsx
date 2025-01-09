@@ -14,9 +14,9 @@ export default function SpeechRecognitionApp() {
       (typeof window !== 'undefined' && 'SpeechRecognition' in window) ||
       'webkitSpeechRecognition' in window
     ) {
-      const SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognitionInstance = new SpeechRecognition();
+      // const SpeechRecognition =
+      //   window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognitionInstance = new webkitSpeechRecognition();
       recognitionInstance.continuous = true;
       recognitionInstance.interimResults = true;
       recognitionInstance.lang = 'ru-RU';
@@ -36,6 +36,8 @@ export default function SpeechRecognitionApp() {
         let interim_transcript = '';
 
         if (typeof(event.results) == 'undefined') {
+          recognitionInstance.onend = null;
+          recognitionInstance.stop();
           return;
         }
         for (let i = event.resultIndex; i < event.results.length; ++i) {
