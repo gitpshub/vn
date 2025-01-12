@@ -35,11 +35,11 @@ export default function SpeechRecognitionApp() {
         let transcript = '';
         let interim_transcript = '';
 
-        if (typeof(event.results) == 'undefined') {
-          recognitionInstance.onend = null;
-          recognitionInstance.stop();
-          return;
-        }
+        // if (typeof(event.results) == 'undefined') {
+        //   //recognition?.onend = null;
+        //   recognition?.stop();
+        //   return;
+        // }
         for (let i = event.resultIndex; i < event.results.length; ++i) {
           if (event.results[i].isFinal) {
             transcript = event.results[i][0].transcript;
@@ -56,7 +56,7 @@ export default function SpeechRecognitionApp() {
       recognitionInstance.onerror = (event) => {
         if (event.error == 'no-speech') {
           console.log('No speech was detected. Try again.');
-          recognitionInstance.start();
+          recognition?.start();
           return;
         }
         console.error('Speech recognition error', event.error);
@@ -64,8 +64,8 @@ export default function SpeechRecognitionApp() {
       };
 
       recognitionInstance.onend = () => {
-        setIsListening(false);
-        //recognition?.start();
+        //setIsListening(false);
+        recognition?.start();
       };
 
       setRecognition(recognitionInstance);
