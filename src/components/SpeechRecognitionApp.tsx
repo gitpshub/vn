@@ -60,7 +60,7 @@ export default function SpeechRecognitionApp() {
           return;
         }
         console.error('Speech recognition error', event.error);
-        setIsListening(false);
+        //setIsListening(false);
       };
 
       recognitionInstance.onend = () => {
