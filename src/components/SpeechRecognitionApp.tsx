@@ -54,13 +54,18 @@ export default function SpeechRecognitionApp() {
       };
 
       recognitionInstance.onerror = (event) => {
+        if (event.error == 'no-speech') {
+          console.log('No speech was detected. Try again.');
+          recognitionInstance.start();
+          return;
+        }
         console.error('Speech recognition error', event.error);
         setIsListening(false);
       };
 
       recognitionInstance.onend = () => {
-        //setIsListening(false);
-        recognition?.start();
+        setIsListening(false);
+        //recognition?.start();
       };
 
       setRecognition(recognitionInstance);
