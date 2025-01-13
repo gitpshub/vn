@@ -77,7 +77,7 @@ export default function SpeechRecognitionApp() {
       recognitionInstance.onend = () => {
         console.log('onend');
         //   //setIsListening(false);
-        recognition?.start();
+        recognitionInstance.start();
       };
 
       setRecognition(recognitionInstance);
