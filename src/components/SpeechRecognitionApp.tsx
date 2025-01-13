@@ -74,12 +74,11 @@ export default function SpeechRecognitionApp() {
         setIsListening(false);
       };
 
-      recognitionInstance.onend = null
-      //  () => {
-      //   console.log('onend');
+      recognitionInstance.onend = () => {
+        console.log('onend');
       //   //setIsListening(false);
-      //   //recognitionInstance.start();
-      // };
+        recognitionInstance.start();
+      };
 
       setRecognition(recognitionInstance);
     } else {
