@@ -40,7 +40,7 @@ export default function SpeechRecognitionApp() {
         let interim_transcript = '';
 
         // if (typeof(event.results) == 'undefined') {
-        //   //recognition?.onend = null;
+        //recognition?.onend = null;
         //   recognition?.stop();
         //   return;
         // }
@@ -74,11 +74,12 @@ export default function SpeechRecognitionApp() {
         setIsListening(false);
       };
 
-      recognitionInstance.onend = () => {
-        console.log('onend');
-        //setIsListening(false);
-        //recognitionInstance.start();
-      };
+      recognitionInstance.onend = null
+      //  () => {
+      //   console.log('onend');
+      //   //setIsListening(false);
+      //   //recognitionInstance.start();
+      // };
 
       setRecognition(recognitionInstance);
     } else {
