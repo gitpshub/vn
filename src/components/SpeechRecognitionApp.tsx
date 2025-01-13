@@ -1,15 +1,15 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './SpeechRecognitionApp.module.css';
 import { FaMicrophone, FaMicrophoneSlash, FaPaperPlane } from 'react-icons/fa';
 
 export default function SpeechRecognitionApp() {
   const [text, setText] = useState('');
   const [isListening, setIsListening] = useState(false);
-  // const [recognition, setRecognition] = useState<SpeechRecognition | null>(
-  //   null
-  // );
+  const [recognition, setRecognition] = useState<SpeechRecognition | null>(
+    null
+  );
 
-  const recognitionInstance = useRef<SpeechRecognition | null>(null);
+  // const recognitionInstance = useRef<SpeechRecognition | null>(null);
   console.log('main');
 
   useEffect(() => {
@@ -20,16 +20,14 @@ export default function SpeechRecognitionApp() {
     ) {
       // const SpeechRecognition =
       //   window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionInstance.current = new webkitSpeechRecognition();
-      recognitionInstance.current.continuous = true;
-      recognitionInstance.current.interimResults = true;
-      recognitionInstance.current.lang = 'ru-RU';
+      const recognitionInstance = new webkitSpeechRecognition();
+      recognitionInstance.continuous = true;
+      recognitionInstance.interimResults = true;
+      recognitionInstance.lang = 'ru-RU';
 
       console.log('useEffect - recognitionInstance');
 
-      recognitionInstance.current.onresult = (
-        event: SpeechRecognitionEvent
-      ) => {
+      recognitionInstance.onresult = (event: SpeechRecognitionEvent) => {
         // const transcript = Array.from(event.results)
         //   .map((result) => result[0].transcript)
         //   .join('');
@@ -64,7 +62,7 @@ export default function SpeechRecognitionApp() {
         setText(transcript);
       };
 
-      recognitionInstance.current.onerror = (event) => {
+      recognitionInstance.onerror = (event: SpeechRecognitionErrorEvent) => {
         console.log('onerror');
         console.log(event.error);
 
@@ -77,27 +75,27 @@ export default function SpeechRecognitionApp() {
         setIsListening(false);
       };
 
-      recognitionInstance.current.onend = () => {
+      recognitionInstance.onend = () => {
         console.log('onend', isListening);
-        console.log(recognitionInstance.current);
+        console.log(recognitionInstance);
         //   //setIsListening(false);
         if (isListening) {
-          recognitionInstance.current?.start();
+          recognitionInstance.start();
         }
       };
 
-      // setRecognition(recognitionInstance);
+      setRecognition(recognitionInstance);
     } else {
       console.error('Speech recognition not supported');
     }
-  }, []);
+  }, [isListening]);
 
   const toggleListening = () => {
     console.log('toggleListening');
     if (isListening) {
-      recognitionInstance.current?.stop();
+      recognition?.stop();
     } else {
-      recognitionInstance.current?.start();
+      recognition?.start();
     }
     setIsListening(!isListening);
   };
