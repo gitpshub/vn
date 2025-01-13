@@ -18,9 +18,9 @@ export default function SpeechRecognitionApp() {
       (typeof window !== 'undefined' && 'SpeechRecognition' in window) ||
       'webkitSpeechRecognition' in window
     ) {
-      const SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionInstance.current = new SpeechRecognition();
+      // const SpeechRecognition =
+      //   window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionInstance.current = new webkitSpeechRecognition();
       recognitionInstance.current.continuous = true;
       recognitionInstance.current.interimResults = true;
       recognitionInstance.current.lang = 'ru-RU';
