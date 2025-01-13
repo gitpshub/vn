@@ -9,7 +9,10 @@ export default function SpeechRecognitionApp() {
     null
   );
 
+  console.log('main');
+
   useEffect(() => {
+    console.log('useEffect');
     if (
       (typeof window !== 'undefined' && 'SpeechRecognition' in window) ||
       'webkitSpeechRecognition' in window
@@ -21,14 +24,15 @@ export default function SpeechRecognitionApp() {
       recognitionInstance.interimResults = true;
       recognitionInstance.lang = 'ru-RU';
 
+      console.log('useEffect - recognitionInstance');
+
       recognitionInstance.onresult = (event) => {
         // const transcript = Array.from(event.results)
         //   .map((result) => result[0].transcript)
         //   .join('');
 
-
         // if (event.results.length == 0) {
-        //   return        
+        //   return
         // }
         // const transcript = event.results[0][0].transcript;
 
@@ -40,11 +44,15 @@ export default function SpeechRecognitionApp() {
         //   recognition?.stop();
         //   return;
         // }
+
+        console.log(event.results);
+
         for (let i = event.resultIndex; i < event.results.length; ++i) {
           if (event.results[i].isFinal) {
             transcript = event.results[i][0].transcript;
           } else {
-            interim_transcript = interim_transcript + event.results[i][0].transcript;
+            interim_transcript =
+              interim_transcript + event.results[i][0].transcript;
           }
         }
         if (transcript == '') {
@@ -54,6 +62,9 @@ export default function SpeechRecognitionApp() {
       };
 
       recognitionInstance.onerror = (event) => {
+        console.log('onerror');
+        console.log(event.error);
+
         if (event.error == 'no-speech') {
           console.log('No speech was detected. Try again.');
           // recognition?.start();
@@ -64,6 +75,7 @@ export default function SpeechRecognitionApp() {
       };
 
       recognitionInstance.onend = () => {
+        console.log('onend');
         //setIsListening(false);
         recognitionInstance.start();
       };
@@ -72,9 +84,11 @@ export default function SpeechRecognitionApp() {
     } else {
       console.error('Speech recognition not supported');
     }
-  }, []);
+  },[]);
 
+  
   const toggleListening = () => {
+    console.log('toggleListening');
     if (isListening) {
       recognition?.stop();
     } else {
