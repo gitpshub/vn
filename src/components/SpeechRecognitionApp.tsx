@@ -77,7 +77,7 @@ export default function SpeechRecognitionApp() {
       recognitionInstance.onend = () => {
         console.log('onend');
         //setIsListening(false);
-        recognitionInstance.start();
+        //recognitionInstance.start();
       };
 
       setRecognition(recognitionInstance);
@@ -86,7 +86,7 @@ export default function SpeechRecognitionApp() {
     }
   },[]);
 
-  
+
   const toggleListening = () => {
     console.log('toggleListening');
     if (isListening) {
