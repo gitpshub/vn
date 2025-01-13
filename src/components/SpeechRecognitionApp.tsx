@@ -76,16 +76,15 @@ export default function SpeechRecognitionApp() {
 
       recognitionInstance.onend = () => {
         console.log('onend');
-      //   //setIsListening(false);
-        recognitionInstance.start();
+        //   //setIsListening(false);
+        recognition?.start();
       };
 
       setRecognition(recognitionInstance);
     } else {
       console.error('Speech recognition not supported');
     }
-  },[]);
-
+  }, []);
 
   const toggleListening = () => {
     console.log('toggleListening');
