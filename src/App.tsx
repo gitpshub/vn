@@ -8,7 +8,8 @@ const App = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const handleFinalResult = useCallback((result: string) => {
-    setText(prev => `${prev} ${result}`.trim());
+    // setText(prev => `${prev} ${result}`.trim());
+    setText(result.trim());
     setInterimText('');
   }, []);
 
