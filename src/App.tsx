@@ -8,9 +8,10 @@ const App = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const handleFinalResult = useCallback((result: string) => {
-    // setText(prev => `${prev} ${result}`.trim());
-    setText(result.trim());
+    setText(prev => `${prev} ${result}`.trim());
     setInterimText('');
+    // setText(result.trim());
+    // setInterimText(result.trim());
   }, []);
 
   const { listening, error, startListening, stopListening } = useSpeechRecognition(

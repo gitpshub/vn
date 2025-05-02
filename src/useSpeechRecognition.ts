@@ -36,28 +36,28 @@ export const useSpeechRecognition = (
     recognition.lang = 'ru-RU';
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
-      // let final = '';
-      // let interim = '';
+      let final = '';
+      let interim = '';
 
-      // for (let i = event.resultIndex; i < event.results.length; ++i) {
-      //   const result = event.results[i];
-      //   if (result.isFinal) {
-      //     final += result[0].transcript;
-      //   } else {
-      //     interim += result[0].transcript;
-      //   }
-      // }
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        const result = event.results[i];
+        if (result.isFinal) {
+          final += result[0].transcript;
+        } else {
+          interim += result[0].transcript;
+        }
+      }
 
       // if (final) onFinalResult(final);
       // if (interim) onInterimResult(interim);
 
       const results = event.results[event.resultIndex];
   
-    if (results.isFinal) {
-      onFinalResult(results[0].transcript);
-    } else {
-      onInterimResult(results[0].transcript);
-                  }
+      if (results.isFinal) {
+        onFinalResult(final);
+      } else {
+        onInterimResult(interim);
+      }
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
