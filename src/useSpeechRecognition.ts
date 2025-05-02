@@ -33,32 +33,32 @@ export const useSpeechRecognition = (
     const recognition = new SpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
+    //recognition.maxAlternatives = 1;
     recognition.lang = 'ru-RU';
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
-      let final = '';
-      let interim = '';
+      // let final = '';
+      // let interim = '';
 
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        const result = event.results[i];
-        if (result.isFinal && (result[0].confidence > 0)) {
-          final += result[0].transcript;
-        } else {
-          interim += result[0].transcript;
-        }
-      }
-
-      if (final) onFinalResult(final);
-      if (interim) onInterimResult(interim);
-
-      // const results = event.results[event.resultIndex];
-  
-      // if (results.isFinal) {
-      //   onFinalResult(final);
-      // } else {
-      //   onInterimResult(interim);
+      // for (let i = event.resultIndex; i < event.results.length; ++i) {
+      //   const result = event.results[i];
+      //   if (result.isFinal && (result[0].confidence > 0)) {
+      //     final += result[0].transcript;
+      //   } else {
+      //     interim += result[0].transcript;
+      //   }
       // }
+
+      // if (final) onFinalResult(final);
+      // if (interim) onInterimResult(interim);
+
+      const result = event.results[event.resultIndex];
+  
+      if (result.isFinal && (result[0].confidence > 0)) {
+        onFinalResult(result[0].transcript);
+      } else {
+        onInterimResult(result[0].transcript);
+      }
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
