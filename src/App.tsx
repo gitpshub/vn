@@ -93,7 +93,8 @@ const App = () => {
             cursor: 'pointer'
           }}
         >
-          {submitting ? '⏳ Отправка...' : '📤 Отправить'}
+          {/* {submitting ? '⏳ Отправка...' : '📤 Отправить'} */}
+          {submitting ? <FaPaperPlane/> : <FaPaperPlane/>} 
         </button>
       </div>
 
