@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useSpeechRecognition } from './useSpeechRecognition';
-import { FaMicrophone, FaMicrophoneSlash, FaPaperPlane } from 'react-icons/fa';
+import { FaMicrophone, FaMicrophoneSlash, FaPaperPlane, FaTrash } from 'react-icons/fa';
 
 const App = () => {
   const [text, setText] = useState('');
@@ -52,6 +52,10 @@ const App = () => {
     }
   };
 
+  const handleTrash = () => {
+    setText("");
+  }
+
   return (
     <div style={{ maxWidth: '600px', margin: '20px auto', padding: '20px' }}>
       <h1>Голосовой ввод с отправкой</h1>
@@ -96,6 +100,27 @@ const App = () => {
           {/* {submitting ? '⏳ Отправка...' : '📤 Отправить'} */}
           {submitting ? <FaPaperPlane/> : <FaPaperPlane/>} 
         </button>
+
+        <button
+          onClick={handleTrash}
+          style={{ 
+          backgroundColor: '#4CAF50',
+          color: 'white',
+          border: 'none',
+          borderRadius: '50%',
+          cursor: 'pointer',
+          width: '60px',
+          height: '60px',
+          fontSize: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+        }}
+        >
+          <FaTrash/>
+        </button>  
+
       </div>
 
       <div style={{ marginBottom: '20px' }}>
