@@ -42,23 +42,23 @@ export const useSpeechRecognition = (
 
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         const result = event.results[i];
-        if (result.isFinal) {
+        if (result.isFinal && (result[0].confidence > 0)) {
           final += result[0].transcript;
         } else {
           interim += result[0].transcript;
         }
       }
 
-      // if (final) onFinalResult(final);
-      // if (interim) onInterimResult(interim);
+      if (final) onFinalResult(final);
+      if (interim) onInterimResult(interim);
 
-      const results = event.results[event.resultIndex];
+      // const results = event.results[event.resultIndex];
   
-      if (results.isFinal) {
-        onFinalResult(final);
-      } else {
-        onInterimResult(interim);
-      }
+      // if (results.isFinal) {
+      //   onFinalResult(final);
+      // } else {
+      //   onInterimResult(interim);
+      // }
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
