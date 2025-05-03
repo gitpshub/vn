@@ -89,7 +89,7 @@ export const useSpeechRecognition = (
       // setListening(false);
       if (isAndroid) {
         // Перезапускаем распознавание для Android
-        setTimeout(() => recognition.start(), 100);
+        //setTimeout(() => recognition.start(), 100);
       } else {
         setListening(false);
       }
