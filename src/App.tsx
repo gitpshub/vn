@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useSpeechRecognition } from './useSpeechRecognition';
-import { FaMicrophone, FaMicrophoneSlash, FaPaperPlane, FaTrash } from 'react-icons/fa';
+import { FaMicrophone, FaMicrophoneSlash, FaPaperPlane, FaTrash, FaArrowsRotate } from 'react-icons/fa';
 
 const App = () => {
   const [text, setText] = useState('');
@@ -10,8 +10,6 @@ const App = () => {
   const handleFinalResult = useCallback((result: string) => {
     setText(prev => `${prev} ${result}`.trim());
     setInterimText('');
-    // setText(result.trim());
-    // setInterimText(result.trim());
   }, []);
 
   const { listening, error, startListening, stopListening } = useSpeechRecognition(
@@ -59,27 +57,15 @@ const App = () => {
   }
 
   return (
-    <div style={{ maxWidth: '600px', margin: '20px auto', padding: '20px' }}>
-      <h1>Голосовой ввод с отправкой</h1>
+    <div className='main'>
+   
+      {error && <div style={{ color: 'red' }}><FaArrowsRotate/>{error}</div>}
       
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-      
-      <div style={{ margin: '20px 0',  display: 'flex',  }}>
+      <div className='buttons'>
         <button 
           onClick={toggleListening}
           style={{ 
             backgroundColor: listening ? '#ff4444' : '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '50%',
-            cursor: 'pointer',
-            width: '60px',
-            height: '60px',
-            fontSize: '24px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
           }}
         >
           {/* {listening ? '⏹️ Остановить запись' : '🎤 Диктовать'} */}
@@ -90,13 +76,13 @@ const App = () => {
           onClick={handleSubmit} 
           disabled={submitting || !text}
           style={{ 
-            marginLeft: '10px',
             backgroundColor: submitting ? '#999' : '#2196F3',
-            color: 'white',
-            padding: '10px 20px',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
+            // color: 'white',
+            // marginLeft: '10px',
+            // padding: '10px 20px',
+            // border: 'none',
+            // borderRadius: '4px',
+            // cursor: 'pointer'
           }}
         >
           {/* {submitting ? '⏳ Отправка...' : '📤 Отправить'} */}
@@ -107,17 +93,17 @@ const App = () => {
           onClick={handleTrash}
           style={{ 
           backgroundColor: '#4CAF50',
-          color: 'white',
-          border: 'none',
-          borderRadius: '50%',
-          cursor: 'pointer',
-          width: '60px',
-          height: '60px',
-          fontSize: '24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+          // color: 'white',
+          // border: 'none',
+          // borderRadius: '50%',
+          // cursor: 'pointer',
+          // width: '60px',
+          // height: '60px',
+          // fontSize: '24px',
+          // display: 'flex',
+          // alignItems: 'center',
+          // justifyContent: 'center',
+          // boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
         }}
         >
           <FaTrash/>
@@ -125,16 +111,17 @@ const App = () => {
 
       </div>
 
+      <div className="texts">  
       <div style={{ marginBottom: '20px' }}>
-        <label>
-          Основной текст:
+        {/* <label>
+          Окончательный текст: */}
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Результаты распознавания..."
             style={{
               width: '100%',
-              height: '150px',
+              height: '100%',
               padding: '10px',
               marginTop: '8px',
               fontSize: '16px',
@@ -142,12 +129,12 @@ const App = () => {
               borderRadius: '4px'
             }}
           />
-        </label>
+        {/* </label> */}
       </div>
 
       <div>
-        <label>
-          Промежуточный текст:
+        {/* <label>
+          Промежуточный текст: */}
           <textarea
             value={interimText}
             readOnly
@@ -164,7 +151,7 @@ const App = () => {
               borderRadius: '4px'
             }}
           />
-        </label>
+        {/* </label> */}
       </div>
 
       {listening && (
@@ -179,6 +166,8 @@ const App = () => {
           Идет запись...
         </div>
       )}
+      </div>
+
     </div>
   );
 };

@@ -9,6 +9,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  border: 1px solid red;
+  height: 100vh;
 }
 
 .pulsating-dot {
@@ -23,4 +25,35 @@ body {
   0% { transform: scale(0.9); }
   50% { transform: scale(1.1); }
   100% { transform: scale(0.9); }
+}
+
+.main {
+  /* max-width: 600px; */
+  margin: 20px auto;
+  padding: 20px;
+}
+
+button {
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.buttons {
+  margin: 20px 0;
+  display: flex;
+  gap: 20px;
+}
+
+.texts {
+  border: 1px solid red;
+  height: 70vh;
 }
