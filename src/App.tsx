@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useSpeechRecognition } from './useSpeechRecognition';
-import { FaMicrophone, FaMicrophoneSlash, FaPaperPlane, FaTrash, FaArrowsRotate } from 'react-icons/fa';
+import { FaMicrophone, FaMicrophoneSlash, FaPaperPlane, FaTrash, FaRedo } from 'react-icons/fa';
 
 const App = () => {
   const [text, setText] = useState('');
@@ -59,7 +59,7 @@ const App = () => {
   return (
     <div className='main'>
    
-      {error && <div style={{ color: 'red' }}><FaArrowsRotate/>{error}</div>}
+      {error && <div style={{ color: 'red' }}><FaRedo/>{error}</div>}
       
       <div className='buttons'>
         <button 
