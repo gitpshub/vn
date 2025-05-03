@@ -56,10 +56,27 @@ const App = () => {
     setText("");
   }
 
+  const handleReload = () => {
+    window.location.reload();
+  }
+
   return (
     <div className='main'>
    
-      {error && <div style={{ color: 'red' }}><FaRedo/>{error}</div>}
+      { error && 
+        <div>
+          <button
+            onClick={handleReload}
+            style={{ 
+              backgroundColor: 'red',
+              width: '100%',
+              borderRadius: '32px'
+            }}
+          >
+            <FaRedo/>{error}
+          </button>
+        </div>
+      } 
       
       <div className='buttons'>
         <button 
@@ -68,7 +85,6 @@ const App = () => {
             backgroundColor: listening ? '#ff4444' : '#4CAF50',
           }}
         >
-          {/* {listening ? '⏹️ Остановить запись' : '🎤 Диктовать'} */}
           {listening ? <FaMicrophoneSlash /> : <FaMicrophone />}
         </button>
         
@@ -77,15 +93,8 @@ const App = () => {
           disabled={submitting || !text}
           style={{ 
             backgroundColor: submitting ? '#999' : '#2196F3',
-            // color: 'white',
-            // marginLeft: '10px',
-            // padding: '10px 20px',
-            // border: 'none',
-            // borderRadius: '4px',
-            // cursor: 'pointer'
           }}
         >
-          {/* {submitting ? '⏳ Отправка...' : '📤 Отправить'} */}
           {submitting ? <FaPaperPlane/> : <FaPaperPlane/>} 
         </button>
 
@@ -93,17 +102,6 @@ const App = () => {
           onClick={handleTrash}
           style={{ 
           backgroundColor: '#4CAF50',
-          // color: 'white',
-          // border: 'none',
-          // borderRadius: '50%',
-          // cursor: 'pointer',
-          // width: '60px',
-          // height: '60px',
-          // fontSize: '24px',
-          // display: 'flex',
-          // alignItems: 'center',
-          // justifyContent: 'center',
-          // boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
         }}
         >
           <FaTrash/>
