@@ -22,6 +22,7 @@ export const useSpeechRecognition = (
   // const [recognitionItem, setRecognitionItem] =
   //   useState<SpeechRecognition | null>(null);
 
+  const [isStarted, setIsStarted] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const isAndroid = /Android/i.test(navigator.userAgent);
 
@@ -85,13 +86,19 @@ export const useSpeechRecognition = (
       setError(`Recognition error: ${event.error}`);
     };
 
+    recognition.onstart = () => { 
+      setIsStarted(true); 
+    };
+    
     recognition.onend = () => {
       // setListening(false);
       if (isAndroid) {
-        // Перезапускаем распознавание для Android
-        //setTimeout(() => recognition.start(), 100);
+        if (!isStarted) {
+          setTimeout(() => recognition.start(), 100);
+        }
       } else {
         setListening(false);
+        setIsStarted(false); 
       }
     };
 
@@ -106,6 +113,7 @@ export const useSpeechRecognition = (
     if (recognitionRef.current) {
       setListening(true);
       recognitionRef.current.start();
+      setIsStarted(true); 
     }
   };
 
@@ -115,6 +123,7 @@ export const useSpeechRecognition = (
     if (recognitionRef.current) {
       setListening(false);
       recognitionRef.current.stop();
+      setIsStarted(false); 
     }
   };
 
