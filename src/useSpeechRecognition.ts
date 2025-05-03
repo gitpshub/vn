@@ -22,7 +22,7 @@ export const useSpeechRecognition = (
   // const [recognitionItem, setRecognitionItem] =
   //   useState<SpeechRecognition | null>(null);
 
-  const recognitionRef = useRef<SpeechRecognition|null>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const isAndroid = /Android/i.test(navigator.userAgent);
 
   useEffect(() => {
@@ -61,7 +61,7 @@ export const useSpeechRecognition = (
 
       // best
       // const result = event.results[event.resultIndex];
-  
+
       // if (result.isFinal && (result[0].confidence > 0)) {
       //   onFinalResult(result[0].transcript);
       // } else {
@@ -71,7 +71,7 @@ export const useSpeechRecognition = (
       const results = event.results[event.resultIndex];
       const transcript = results[0].transcript;
 
-      if (results.isFinal && (results[0].confidence > 0)) {
+      if (results.isFinal && results[0].confidence > 0) {
         onFinalResult(transcript);
         if (isAndroid) {
           setTimeout(() => recognition.start(), 100);
@@ -79,7 +79,6 @@ export const useSpeechRecognition = (
       } else {
         onInterimResult(transcript);
       }
-
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
@@ -88,7 +87,7 @@ export const useSpeechRecognition = (
 
     recognition.onend = () => {
       // setListening(false);
-      if (isAndroid && listening) {
+      if (isAndroid) {
         // Перезапускаем распознавание для Android
         setTimeout(() => recognition.start(), 100);
       } else {
@@ -99,7 +98,7 @@ export const useSpeechRecognition = (
     // setRecognitionItem(recognition);
 
     return () => recognition.stop();
-  }, [onFinalResult, onInterimResult]); 
+  }, [onFinalResult, onInterimResult, isAndroid]);
 
   const startListening = () => {
     // setListening(true);
