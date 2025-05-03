@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 declare global {
   interface Window {
@@ -19,8 +19,11 @@ export const useSpeechRecognition = (
 ): SpeechRecognitionHook => {
   const [listening, setListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [recognitionItem, setRecognitionItem] =
-    useState<SpeechRecognition | null>(null);
+  // const [recognitionItem, setRecognitionItem] =
+  //   useState<SpeechRecognition | null>(null);
+
+  const recognitionRef = useRef<SpeechRecognition|null>(null);
+  const isAndroid = /Android/i.test(navigator.userAgent);
 
   useEffect(() => {
     const SpeechRecognition =
@@ -31,9 +34,13 @@ export const useSpeechRecognition = (
     }
 
     const recognition = new SpeechRecognition();
-    recognition.continuous = true;
+    recognitionRef.current = recognition;
+    recognition.continuous = isAndroid ? false : true;
     recognition.interimResults = true;
-    //recognition.maxAlternatives = 1;
+
+    // recognition.continuous = true;
+    // recognition.interimResults = true;
+    // //-recognition.maxAlternatives = 1;
     recognition.lang = 'ru-RU';
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
@@ -52,13 +59,27 @@ export const useSpeechRecognition = (
       // if (final) onFinalResult(final);
       // if (interim) onInterimResult(interim);
 
-      const result = event.results[event.resultIndex];
+      // best
+      // const result = event.results[event.resultIndex];
   
-      if (result.isFinal && (result[0].confidence > 0)) {
-        onFinalResult(result[0].transcript);
+      // if (result.isFinal && (result[0].confidence > 0)) {
+      //   onFinalResult(result[0].transcript);
+      // } else {
+      //   onInterimResult(result[0].transcript);
+      // }
+
+      const results = event.results[event.resultIndex];
+      const transcript = results[0].transcript;
+
+      if (results.isFinal && (results[0].confidence > 0)) {
+        onFinalResult(transcript);
+        if (isAndroid) {
+          setTimeout(() => recognition.start(), 100);
+        }
       } else {
-        onInterimResult(result[0].transcript);
+        onInterimResult(transcript);
       }
+
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
@@ -66,30 +87,36 @@ export const useSpeechRecognition = (
     };
 
     recognition.onend = () => {
-      setListening(false);
+      // setListening(false);
+      if (isAndroid && listening) {
+        // Перезапускаем распознавание для Android
+        setTimeout(() => recognition.start(), 100);
+      } else {
+        setListening(false);
+      }
     };
 
-    setRecognitionItem(recognition);
+    // setRecognitionItem(recognition);
 
     return () => recognition.stop();
   }, [onFinalResult, onInterimResult]); 
 
   const startListening = () => {
-    setListening(true);
-    // const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    // if (SpeechRecognition) {
-    //   const recognition = new SpeechRecognition();
-    recognitionItem?.start();
-    // }
+    // setListening(true);
+    // recognitionItem?.start();
+    if (recognitionRef.current) {
+      setListening(true);
+      recognitionRef.current.start();
+    }
   };
 
   const stopListening = () => {
-    setListening(false);
-    // const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    // if (SpeechRecognition) {
-    //   const recognition = new SpeechRecognition();
-    recognitionItem?.stop();
-    // }
+    // setListening(false);
+    // recognitionItem?.stop();
+    if (recognitionRef.current) {
+      setListening(false);
+      recognitionRef.current.stop();
+    }
   };
 
   return { listening, error, startListening, stopListening };
