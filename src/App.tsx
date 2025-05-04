@@ -1,6 +1,12 @@
 import { useState, useCallback } from 'react';
 import { useSpeechRecognition } from './useSpeechRecognition';
-import { FaMicrophone, FaMicrophoneSlash, FaPaperPlane, FaTrash, FaRedo } from 'react-icons/fa';
+import {
+  FaMicrophone,
+  FaMicrophoneSlash,
+  FaPaperPlane,
+  FaTrash,
+} from 'react-icons/fa';
+import ErrorForm from './components/ErrorForm';
 
 const App = () => {
   const [text, setText] = useState('');
@@ -8,19 +14,21 @@ const App = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const handleFinalResult = useCallback((result: string) => {
-    setText(prev => `${prev} ${result}`.trim());
+    setText((prev) => `${prev} ${result}`.trim());
     setInterimText('');
   }, []);
 
-  const { listening, error, startListening, stopListening } = useSpeechRecognition(
-    handleFinalResult,
-    setInterimText
-  );
+  const handleInterimResult = useCallback((result: string) => {
+    setInterimText(result);
+  }, []);
+
+  const { listening, error, startListening, stopListening } =
+    useSpeechRecognition(handleFinalResult, handleInterimResult);
 
   const toggleListening = () => {
     if (listening) {
       stopListening();
-      setText(prev => `${prev} ${interimText}`.trim());
+      setText((prev) => `${prev} ${interimText}`.trim());
       setInterimText('');
     } else {
       startListening();
@@ -29,7 +37,7 @@ const App = () => {
 
   const handleSubmit = async () => {
     if (!text.trim()) return;
-    
+
     setSubmitting(true);
     try {
       // Замените URL на ваш эндпоинт
@@ -53,119 +61,86 @@ const App = () => {
   };
 
   const handleTrash = () => {
-    setText("");
-  }
-
-  const handleReload = () => {
-    window.location.reload();
-  }
+    setText('');
+  };
 
   return (
     <div className='main'>
-   
-      { error && 
-        <div>
-          <button
-            onClick={handleReload}
-            style={{ 
-              backgroundColor: 'red',
-              width: '100%',
-              borderRadius: '32px'
-            }}
-          >
-            <FaRedo/>{error}
-          </button>
-        </div>
-      } 
-      
-      <div className='buttons'>
-        <button 
-          onClick={toggleListening}
-          style={{ 
-            backgroundColor: listening ? '#ff4444' : '#4CAF50',
-          }}
-        >
-          {listening ? <FaMicrophoneSlash /> : <FaMicrophone />}
-        </button>
-        
-        <button 
-          onClick={handleSubmit} 
-          disabled={submitting || !text}
-          style={{ 
-            backgroundColor: submitting ? '#999' : '#2196F3',
-          }}
-        >
-          {submitting ? <FaPaperPlane/> : <FaPaperPlane/>} 
-        </button>
+      {error != null && <ErrorForm error={error} />}
 
-        <button
-          onClick={handleTrash}
-          style={{ 
-          backgroundColor: '#4CAF50',
-        }}
-        >
-          <FaTrash/>
-        </button>  
+      {error == null && (
+        <>
+          <div className='buttons'>
+            <button
+              onClick={toggleListening}
+              style={{
+                backgroundColor: listening ? '#ff4444' : '#4CAF50',
+              }}
+            >
+              {listening ? <FaMicrophoneSlash /> : <FaMicrophone />}
+            </button>
 
-      </div>
+            <button
+              onClick={handleSubmit}
+              disabled={submitting || !text || listening}
+              style={{
+                backgroundColor: submitting ? '#999' : '#2196F3',
+              }}
+            >
+              {submitting ? <FaPaperPlane /> : <FaPaperPlane />}
+            </button>
 
-      <div className="texts">  
-      <div style={{ marginBottom: '20px' }}>
-        {/* <label>
-          Окончательный текст: */}
-          <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Результаты распознавания..."
-            style={{
-              width: '100%',
-              height: '100%',
-              padding: '10px',
-              marginTop: '8px',
-              fontSize: '16px',
-              border: '1px solid #ddd',
-              borderRadius: '4px'
-            }}
-          />
-        {/* </label> */}
-      </div>
+            <button
+              onClick={handleTrash}
+              style={{
+                backgroundColor: '#4CAF50',
+                marginLeft: 'auto'
+              }}
+            >
+              <FaTrash />
+            </button>
+          </div>
 
-      <div>
-        {/* <label>
-          Промежуточный текст: */}
-          <textarea
-            value={interimText}
-            readOnly
-            placeholder="Текст в процессе распознавания..."
-            style={{
-              width: '100%',
-              height: '100px',
-              padding: '10px',
-              marginTop: '8px',
-              fontSize: '16px',
-              backgroundColor: '#f5f5f5',
-              color: '#666',
-              border: '1px solid #ddd',
-              borderRadius: '4px'
-            }}
-          />
-        {/* </label> */}
-      </div>
+          <div className='texts'>
+            {/* <div style={{ marginBottom: '20px' }}> */}
+            <textarea
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder='Результаты распознавания...'
+              style={{
+                flexGrow: '1',
+              }}
+            />
+            {/* </div> */}
 
-      {listening && (
-        <div style={{ 
-          marginTop: '10px', 
-          color: '#4CAF50',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px'
-        }}>
-          <div className="pulsating-dot" />
-          Идет запись...
-        </div>
+            {/* <div> */}
+            <textarea
+              value={interimText}
+              readOnly
+              placeholder='Текст в процессе распознавания...'
+              style={{
+                backgroundColor: '#f5f5f5',
+              }}
+            />
+            {/* </div> */}
+
+            {/* {listening && (
+                <div
+                  style={{
+                    marginTop: '10px',
+                    color: '#4CAF50',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}
+                >
+                  <div className='pulsating-dot' />
+                  Идет запись...
+                </div>
+              )} */}
+          </div>
+        </>
       )}
-      </div>
-
     </div>
   );
 };

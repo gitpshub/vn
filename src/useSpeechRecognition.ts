@@ -51,7 +51,7 @@ export const useSpeechRecognition = (
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-      setError(`Ошибка распознавания: ${event.error}`);
+      setError(`${event.error}`);
     };
 
     recognition.onend = () => {
