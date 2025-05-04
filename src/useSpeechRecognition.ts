@@ -43,7 +43,7 @@ export const useSpeechRecognition = (
       if (results.isFinal && results[0].confidence > 0) {
         onFinalResult(transcript);
         if (isAndroid) {
-          setTimeout(() => recognition.start(), 100);
+          setTimeout(startListening, 100);
         }
       } else {
         onInterimResult(transcript);
@@ -56,7 +56,7 @@ export const useSpeechRecognition = (
 
     recognition.onend = () => {
       if (isAndroid) {
-        setTimeout(() => recognition.start(), 100);
+        setTimeout(startListening, 100);
       } else {
         setListening(false);
       }
