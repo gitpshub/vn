@@ -9,12 +9,21 @@ import {
 import ErrorForm from './components/ErrorForm';
 
 const App = () => {
-  const [text, setText] = useState('');
+
+  const saveToLocalStorage = (text:string) => {
+    localStorage.setItem('finalText', text);
+  }
+
+  const [text, setText] = useState(localStorage.getItem('finalText')||'');
   const [interimText, setInterimText] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const handleFinalResult = useCallback((result: string) => {
-    setText((prev) => `${prev} ${result}`.trim());
+    setText((prev) => {
+        const newResult = `${prev} ${result}`.trim();
+        saveToLocalStorage(newResult);
+        return newResult;
+    } );
     setInterimText('');
   }, []);
 
@@ -60,9 +69,16 @@ const App = () => {
     }
   };
 
+  const handleChange = (changedText: string) => {
+    setText(changedText);
+    saveToLocalStorage(changedText);  
+  };
+
   const handleTrash = () => {
     setText('');
   };
+
+  const submitDisabled = submitting || !text || listening;
 
   return (
     <div className='main'>
@@ -82,9 +98,9 @@ const App = () => {
 
             <button
               onClick={handleSubmit}
-              disabled={submitting || !text || listening}
+              disabled={submitDisabled}
               style={{
-                backgroundColor: submitting ? '#999' : '#2196F3',
+                backgroundColor: submitDisabled ? '#999' : '#2196F3',
               }}
             >
               {submitting ? <FaPaperPlane /> : <FaPaperPlane />}
@@ -94,51 +110,30 @@ const App = () => {
               onClick={handleTrash}
               style={{
                 backgroundColor: '#4CAF50',
-                marginLeft: 'auto'
+                marginLeft: 'auto',
               }}
             >
               <FaTrash />
             </button>
           </div>
 
-          <div className='texts'>
-            {/* <div style={{ marginBottom: '20px' }}> */}
-            <textarea
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder='Результаты распознавания...'
-              style={{
-                flexGrow: '1',
-              }}
-            />
-            {/* </div> */}
+          <textarea
+            value={text}
+            onChange={(e) => {handleChange(e.target.value)}}
+            placeholder='Результаты распознавания...'
+            style={{
+              flexGrow: '1',
+            }}
+          />
 
-            {/* <div> */}
-            <textarea
-              value={interimText}
-              readOnly
-              placeholder='Текст в процессе распознавания...'
-              style={{
-                backgroundColor: '#f5f5f5',
-              }}
-            />
-            {/* </div> */}
-
-            {/* {listening && (
-                <div
-                  style={{
-                    marginTop: '10px',
-                    color: '#4CAF50',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                  }}
-                >
-                  <div className='pulsating-dot' />
-                  Идет запись...
-                </div>
-              )} */}
-          </div>
+          <textarea
+            value={interimText}
+            readOnly
+            placeholder='Текст в процессе распознавания...'
+            style={{
+              backgroundColor: '#f5f5f5',
+            }}
+          />
         </>
       )}
     </div>
