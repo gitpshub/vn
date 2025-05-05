@@ -88,9 +88,7 @@ const App = () => {
     setIsTimerRun(!isTimerRun);
   };
 
-  const resetTimer = () => {
-    
-  }
+  const resetTimer = () => {};
 
   return (
     <div className='main'>
@@ -100,6 +98,7 @@ const App = () => {
         <>
           <div className='timer'>
             <button
+              className={isTimerRun ? 'animate' : ''}
               onClick={toggleTimer}
               style={{
                 backgroundColor: isTimerRun ? '#ff4444' : '#4CAF50',
@@ -117,8 +116,20 @@ const App = () => {
               <FaTimes />
             </button>
           </div>
+
+          <textarea
+            value={text}
+            onChange={(e) => {
+              handleChange(e.target.value);
+            }}
+            placeholder='Результаты распознавания...'
+            style={{
+              flexGrow: '1',
+            }}
+          />
           <div className='buttons'>
             <button
+              className={listening ? 'animate' : ''}
               onClick={toggleListening}
               style={{
                 backgroundColor: listening ? '#ff4444' : '#4CAF50',
@@ -147,18 +158,6 @@ const App = () => {
               <FaTrash />
             </button>
           </div>
-
-          <textarea
-            value={text}
-            onChange={(e) => {
-              handleChange(e.target.value);
-            }}
-            placeholder='Результаты распознавания...'
-            style={{
-              flexGrow: '1',
-            }}
-          />
-
           <textarea
             value={interimText}
             readOnly
