@@ -5,25 +5,28 @@ import {
   FaMicrophoneSlash,
   FaPaperPlane,
   FaTrash,
+  FaPlay,
+  FaTimes,
+  FaPause,
 } from 'react-icons/fa';
 import ErrorForm from './components/ErrorForm';
 
 const App = () => {
-
-  const saveToLocalStorage = (text:string) => {
+  const saveToLocalStorage = (text: string) => {
     localStorage.setItem('finalText', text);
-  }
+  };
 
-  const [text, setText] = useState(localStorage.getItem('finalText')||'');
+  const [text, setText] = useState(localStorage.getItem('finalText') || '');
   const [interimText, setInterimText] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [isTimerRun, setIsTimerRun] = useState(false);
 
   const handleFinalResult = useCallback((result: string) => {
     setText((prev) => {
-        const newResult = `${prev} ${result}`.trim();
-        saveToLocalStorage(newResult);
-        return newResult;
-    } );
+      const newResult = `${prev} ${result}`.trim();
+      saveToLocalStorage(newResult);
+      return newResult;
+    });
     setInterimText('');
   }, []);
 
@@ -71,14 +74,23 @@ const App = () => {
 
   const handleChange = (changedText: string) => {
     setText(changedText);
-    saveToLocalStorage(changedText);  
+    saveToLocalStorage(changedText);
   };
 
   const handleTrash = () => {
     setText('');
+    saveToLocalStorage('');
   };
 
   const submitDisabled = submitting || !text || listening;
+
+  const toggleTimer = () => {
+    setIsTimerRun(!isTimerRun);
+  };
+
+  const resetTimer = () => {
+    
+  }
 
   return (
     <div className='main'>
@@ -86,6 +98,25 @@ const App = () => {
 
       {error == null && (
         <>
+          <div className='timer'>
+            <button
+              onClick={toggleTimer}
+              style={{
+                backgroundColor: isTimerRun ? '#ff4444' : '#4CAF50',
+              }}
+            >
+              {isTimerRun ? <FaPause /> : <FaPlay />}
+            </button>
+            <button
+              onClick={resetTimer}
+              style={{
+                backgroundColor: '#4CAF50',
+                marginLeft: 'auto',
+              }}
+            >
+              <FaTimes />
+            </button>
+          </div>
           <div className='buttons'>
             <button
               onClick={toggleListening}
@@ -119,7 +150,9 @@ const App = () => {
 
           <textarea
             value={text}
-            onChange={(e) => {handleChange(e.target.value)}}
+            onChange={(e) => {
+              handleChange(e.target.value);
+            }}
             placeholder='Результаты распознавания...'
             style={{
               flexGrow: '1',
