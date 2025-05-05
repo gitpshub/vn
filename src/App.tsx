@@ -96,37 +96,6 @@ const App = () => {
 
       {error == null && (
         <>
-          <div className='timer'>
-            <button
-              className={isTimerRun ? 'animate' : ''}
-              onClick={toggleTimer}
-              style={{
-                backgroundColor: isTimerRun ? '#ff4444' : '#4CAF50',
-              }}
-            >
-              {isTimerRun ? <FaPause /> : <FaPlay />}
-            </button>
-            <button
-              onClick={resetTimer}
-              style={{
-                backgroundColor: '#4CAF50',
-                marginLeft: 'auto',
-              }}
-            >
-              <FaTimes />
-            </button>
-          </div>
-
-          <textarea
-            value={text}
-            onChange={(e) => {
-              handleChange(e.target.value);
-            }}
-            placeholder='Результаты распознавания...'
-            style={{
-              flexGrow: '1',
-            }}
-          />
           <div className='buttons'>
             <button
               className={listening ? 'animate' : ''}
@@ -159,6 +128,17 @@ const App = () => {
             </button>
           </div>
           <textarea
+            value={text}
+            onChange={(e) => {
+              handleChange(e.target.value);
+            }}
+            placeholder='Результаты распознавания...'
+            style={{
+              flexGrow: '1',
+            }}
+          />
+
+          <textarea
             value={interimText}
             readOnly
             placeholder='Текст в процессе распознавания...'
@@ -166,6 +146,26 @@ const App = () => {
               backgroundColor: '#f5f5f5',
             }}
           />
+          <div className='timer'>
+            <button
+              className={isTimerRun ? 'animate' : ''}
+              onClick={toggleTimer}
+              style={{
+                backgroundColor: isTimerRun ? '#ff4444' : '#4CAF50',
+              }}
+            >
+              {isTimerRun ? <FaPause /> : <FaPlay />}
+            </button>
+            <button
+              onClick={resetTimer}
+              style={{
+                backgroundColor: '#4CAF50',
+                marginLeft: 'auto',
+              }}
+            >
+              <FaTimes />
+            </button>
+          </div>
         </>
       )}
     </div>
