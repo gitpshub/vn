@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { FaPlay, FaPause, FaTimes } from 'react-icons/fa';
+import { requestWakeLock } from '../utils';
 
 const Timer = () => {
   const [isTimerRun, setIsTimerRun] = useState(() => {
@@ -65,6 +66,12 @@ const Timer = () => {
     }
   }, [elapsedTime, isTimerRun]);
 
+  useEffect(() => {
+    if (isTimerRun) {
+      requestWakeLock(); 
+    }
+  }, [isTimerRun]);
+
   const formatTime = (ms: number) => {
     const totalSeconds = Math.floor(ms / 1000);
     const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
@@ -73,7 +80,6 @@ const Timer = () => {
       '0'
     );
     const seconds = String(totalSeconds % 60).padStart(2, '0');
-
     const color = isTimerRun ? '#333' : '#999';
 
     return (
@@ -101,13 +107,14 @@ const Timer = () => {
     const totalMinutes = Math.ceil(ms / 1000 / 60 / 15) * 15;
     const hours = String(Math.floor(totalMinutes / 60)).padStart(2, '0');
     const minutes = String(totalMinutes % 60).padStart(2, '0');
+    const color = isTimerRun ? '#999' : '#333';
 
     return (
       <span
         style={{
           fontSize: '24px',
           fontWeight: 'bold',
-          color: '#999',
+          color: `${color}`,
           marginLeft: 'auto',
         }}
       >

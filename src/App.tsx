@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSpeechRecognition } from './useSpeechRecognition';
 import {
   FaMicrophone,
@@ -8,6 +8,7 @@ import {
 } from 'react-icons/fa';
 import ErrorForm from './components/ErrorForm';
 import Timer from './components/Timer';
+import { requestWakeLock } from './utils';
 
 const App = () => {
   const saveToLocalStorage = (text: string) => {
@@ -17,7 +18,7 @@ const App = () => {
   const [text, setText] = useState(localStorage.getItem('finalText') || '');
   const [interimText, setInterimText] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  
+
   const handleFinalResult = useCallback((result: string) => {
     setText((prev) => {
       const newResult = `${prev} ${result}`.trim();
@@ -33,6 +34,12 @@ const App = () => {
 
   const { listening, error, startListening, stopListening } =
     useSpeechRecognition(handleFinalResult, handleInterimResult);
+
+  useEffect(() => {
+    if (listening) {
+      requestWakeLock();
+    }
+  }, [listening]);
 
   const toggleListening = () => {
     if (listening) {
