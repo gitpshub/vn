@@ -5,11 +5,9 @@ import {
   FaMicrophoneSlash,
   FaPaperPlane,
   FaTrash,
-  FaPlay,
-  FaTimes,
-  FaPause,
 } from 'react-icons/fa';
 import ErrorForm from './components/ErrorForm';
+import Timer from './components/Timer';
 
 const App = () => {
   const saveToLocalStorage = (text: string) => {
@@ -19,8 +17,7 @@ const App = () => {
   const [text, setText] = useState(localStorage.getItem('finalText') || '');
   const [interimText, setInterimText] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [isTimerRun, setIsTimerRun] = useState(false);
-
+  
   const handleFinalResult = useCallback((result: string) => {
     setText((prev) => {
       const newResult = `${prev} ${result}`.trim();
@@ -84,12 +81,6 @@ const App = () => {
 
   const submitDisabled = submitting || !text || listening;
 
-  const toggleTimer = () => {
-    setIsTimerRun(!isTimerRun);
-  };
-
-  const resetTimer = () => {};
-
   return (
     <div className='main'>
       {error != null && <ErrorForm error={error} />}
@@ -146,26 +137,7 @@ const App = () => {
               backgroundColor: '#f5f5f5',
             }}
           />
-          <div className='timer'>
-            <button
-              className={isTimerRun ? 'animate' : ''}
-              onClick={toggleTimer}
-              style={{
-                backgroundColor: isTimerRun ? '#ff4444' : '#4CAF50',
-              }}
-            >
-              {isTimerRun ? <FaPause /> : <FaPlay />}
-            </button>
-            <button
-              onClick={resetTimer}
-              style={{
-                backgroundColor: '#4CAF50',
-                marginLeft: 'auto',
-              }}
-            >
-              <FaTimes />
-            </button>
-          </div>
+          <Timer />
         </>
       )}
     </div>
