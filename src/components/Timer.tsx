@@ -13,6 +13,8 @@ const Timer = () => {
     return savedTime ? parseInt(savedTime, 10) : null;
   });
 
+  const beepVolume = 0.05;
+
   useEffect(() => {
     localStorage.setItem('timerRunning', JSON.stringify(isTimerRun));
   }, [isTimerRun]);
@@ -20,14 +22,13 @@ const Timer = () => {
   useEffect(() => {
     if (startTime !== null) {
       localStorage.setItem('timerStartTime', startTime.toString());
-    } else {
-      localStorage.removeItem('timerStartTime');
     }
   }, [startTime]);
 
   const getElapsedTime = useCallback((start: number | null) => {
     if (!start) return 0;
     const now = Date.now();
+    localStorage.setItem('timerStopTime', now.toString());
     return now - start;
   }, []);
 
@@ -46,29 +47,44 @@ const Timer = () => {
     return () => clearInterval(interval);
   }, [isTimerRun, getElapsedTime, startTime]);
 
+  const playShortBeep = useCallback((beepVolume: number) => {
+    const audioCtx = new window.AudioContext();
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+
+    gainNode.gain.setValueAtTime(beepVolume, audioCtx.currentTime);
+    oscillator.connect(gainNode).connect(audioCtx.destination);
+    oscillator.start();
+
+    setTimeout(() => {
+      oscillator.stop();
+      audioCtx.close();
+    }, 150);
+  }, []);
+
   useEffect(() => {
-    const vibrateInterval = 60 * 1;
-
-    if (!isTimerRun || !('vibrate' in navigator)) return;
-
+    const checkInterval = 60 * 15;
     const totalSeconds = Math.floor(elapsedTime / 1000);
-    const lastVibrationTime = parseInt(
-      localStorage.getItem('lastVibrationTime') || '0'
+    const lastCheckTime = parseInt(
+      localStorage.getItem('lastCheckTime') || '0'
     );
 
     if (
-      totalSeconds >= vibrateInterval &&
-      totalSeconds % vibrateInterval === 0 &&
-      totalSeconds !== lastVibrationTime
+      totalSeconds >= checkInterval &&
+      totalSeconds % checkInterval === 0 &&
+      totalSeconds !== lastCheckTime
     ) {
-      navigator.vibrate([200, 100, 200]); // трель
-      localStorage.setItem('lastVibrationTime', totalSeconds.toString());
+      playShortBeep(beepVolume);
+      localStorage.setItem('lastCheckTime', totalSeconds.toString());
     }
-  }, [elapsedTime, isTimerRun]);
+  }, [elapsedTime, isTimerRun, playShortBeep, beepVolume]);
 
   useEffect(() => {
     if (isTimerRun) {
-      requestWakeLock(); 
+      requestWakeLock();
     }
   }, [isTimerRun]);
 
@@ -94,10 +110,9 @@ const Timer = () => {
             fontSize: '16px',
             fontWeight: 'bold',
             color: '#999',
-            marginLeft: '4px',
           }}
         >
-          {seconds}
+          :{seconds}
         </span>
       </>
     );
@@ -137,7 +152,9 @@ const Timer = () => {
     setIsTimerRun(false);
     setStartTime(null);
     setElapsedTime(0);
-    localStorage.removeItem('lastVibrationTime');
+    localStorage.removeItem('lastCheckTime');
+    localStorage.removeItem('timerStartTime');
+    localStorage.removeItem('timerStopTime');
   };
 
   return (

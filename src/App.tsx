@@ -11,6 +11,9 @@ import Timer from './components/Timer';
 import { requestWakeLock } from './utils';
 
 const App = () => {
+  const API_KEY = '';
+  const API_URL = '';
+
   const saveToLocalStorage = (text: string) => {
     localStorage.setItem('finalText', text);
   };
@@ -55,25 +58,36 @@ const App = () => {
     if (!text.trim()) return;
 
     setSubmitting(true);
-    try {
-      // Замените URL на ваш эндпоинт
-      const response = await fetch('https://your-api-endpoint.example.com', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ text }),
-      });
 
-      if (!response.ok) throw new Error('Ошибка отправки');
-      alert('Текст успешно отправлен!');
-      setText('');
-    } catch (err) {
-      console.error('Ошибка:', err);
-      alert('Произошла ошибка при отправке');
-    } finally {
-      setSubmitting(false);
-    }
+    const finalText = localStorage.getItem('finalText');
+    const timerStartTime = localStorage.getItem('timerStartTime') || '';
+    const timerStopTime = localStorage.getItem('timerStopTime') || '';
+
+    const dataForSend = {
+      finalText,
+      timerStartTime,
+      timerStopTime,
+    };
+
+    fetch(`${API_URL}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `ApiKey ${API_KEY}`,
+      },
+      body: JSON.stringify({ ...dataForSend }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Ошибка сети');
+        }
+        console.log('Успех:', response);
+        setSubmitting(false);
+      })
+      .catch((error) => {
+        console.error('Ошибка отправки:', error);
+        setSubmitting(false);
+      });
   };
 
   const handleChange = (changedText: string) => {
