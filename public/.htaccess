@@ -3,7 +3,7 @@ RewriteBase /
 
 # API маршруты
 RewriteCond %{REQUEST_URI} ^/api/
-RewriteRule ^api/(.*)$ api/script.php [QSA,L]
+RewriteRule ^api/(.*)$ api/api.php [QSA,L]
 
 # SPA маршруты
 RewriteCond %{REQUEST_FILENAME} !-f
