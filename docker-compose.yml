@@ -1,0 +1,22 @@
+version: '3'
+services:
+  web:
+    image: php:8.2-apache
+    ports:
+      - "8000:80"
+    volumes:
+      - ./public:/var/www/html
+    restart: unless-stopped
+    command: >
+      sh -c "
+        a2enmod rewrite &&
+        echo '<VirtualHost *:80>
+          DocumentRoot /var/www/html/
+          <Directory /var/www/html/>
+            Options Indexes FollowSymLinks
+            AllowOverride All
+            Require all granted
+          </Directory>
+        </VirtualHost>' > /etc/apache2/sites-available/000-default.conf &&
+        apache2-foreground
+      "
