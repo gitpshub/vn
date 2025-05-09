@@ -3,7 +3,7 @@
 header("Content-Type: application/json");
 
 // === Загрузка настроек из .env ===
-$env = loadEnv(dirname(__DIR__) . '/.env');
+$env = loadEnv(dirname(__DIR__, 2) . '/.env');
 
 // === Настройки из .env или дефолтные значения ===
 $validApiKey = $env['API_KEY'] ?? 'default_unsafe_key'; // Не используй в проде!
