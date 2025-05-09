@@ -1,0 +1,11 @@
+RewriteEngine On
+RewriteBase /
+
+# API маршруты
+RewriteCond %{REQUEST_URI} ^/api/
+RewriteRule ^api/(.*)$ api/script.php [QSA,L]
+
+# SPA маршруты
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
