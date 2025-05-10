@@ -9,6 +9,7 @@ import {
 import ErrorForm from './components/ErrorForm';
 import Timer from './components/Timer';
 import { requestWakeLock } from './utils';
+import Notification from './components/Notification';
 
 const App = () => {
   const API_KEY = 'dev';
@@ -23,6 +24,7 @@ const App = () => {
   const [interimText, setInterimText] = useState('');
   const [sendError, setSendError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [submited, setSubmited] = useState(false);
 
   const handleFinalResult = useCallback((result: string) => {
     setText((prev) => {
@@ -91,6 +93,7 @@ const App = () => {
           setSendError(`Статус ${response.status} - ${response.statusText}`);
         } else {
           console.log('Успех:', response);
+          setSubmited(true);
         }
         setSubmitting(false);
       })
@@ -121,7 +124,11 @@ const App = () => {
         <ErrorForm error={sendError} type='Ошибка отправки' />
       )}
 
-      {speechError == null && sendError == null && (
+      {submited && (
+        <Notification message='Заметка отправлена' />
+      )}
+
+      {speechError == null && sendError == null && !submited && (
         <>
           <div className='buttons'>
             <button
