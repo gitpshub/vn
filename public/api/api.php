@@ -138,7 +138,7 @@ function getRequestHeaders(): array
 
 function checkApiKey(string $validApiKey): void
 {
-    $headers = getRequestHeaders()();
+    $headers = getRequestHeaders();
     $apiKeyHeader = $headers['AUTHORIZATION'] ?? '';
 
     if (strpos($apiKeyHeader, 'ApiKey ') !== 0) {
