@@ -24,8 +24,6 @@ if (!is_dir($dataDir)) {
 function handleSave(): void
 {
     global $dataDir;
-    $headers = getRequestHeaders();
-    $userAgent = $headers['USER-AGENT'] ?? 'n/a';
 
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
@@ -43,8 +41,7 @@ function handleSave(): void
     }
 
     $data['timestamp'] = date('c');
-    $data['device'] = $userAgent;
-
+    
     $filename = uniqid('', true) . '.json';
     $filepath = $dataDir . $filename;
 

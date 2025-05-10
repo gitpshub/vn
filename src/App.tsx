@@ -10,6 +10,7 @@ import ErrorForm from './components/ErrorForm';
 import Timer from './components/Timer';
 import { requestWakeLock } from './utils';
 import Notification from './components/Notification';
+import Activation from './components/Activation';
 
 const App = () => {
   const API_KEY = 'dev';
@@ -25,6 +26,7 @@ const App = () => {
   const [sendError, setSendError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submited, setSubmited] = useState(false);
+  const device = localStorage.getItem('device') || '';
 
   const handleFinalResult = useCallback((result: string) => {
     setText((prev) => {
@@ -75,13 +77,14 @@ const App = () => {
       finalText,
       timerStartTime,
       timerStopTime,
+      device
     };
 
     fetch(`${API_URL}`, {
       method: 'POST',
       headers: {
-        "Content-Type": 'application/json',
-        "X-Authorization": `ApiKey ${API_KEY}`,
+        'Content-Type': 'application/json',
+        'X-Authorization': `ApiKey ${API_KEY}`,
       },
       body: JSON.stringify({
         data: { ...dataForSend },
@@ -114,9 +117,12 @@ const App = () => {
   };
 
   const submitDisabled = submitting || !text || listening;
+  const mainMode = speechError == null && sendError == null && !submited && device != ''; 
 
   return (
     <div className='main'>
+      {device == '' && <Activation />}
+
       {speechError != null && (
         <ErrorForm error={speechError} type='Ошибка распознавания' />
       )}
@@ -124,11 +130,9 @@ const App = () => {
         <ErrorForm error={sendError} type='Ошибка отправки' />
       )}
 
-      {submited && (
-        <Notification message='Заметка отправлена' />
-      )}
+      {submited && <Notification message='Заметка отправлена' />}
 
-      {speechError == null && sendError == null && !submited && (
+      {mainMode && (
         <>
           <div className='buttons'>
             <button
