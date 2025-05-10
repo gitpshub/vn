@@ -137,6 +137,8 @@ function checkApiKey(string $validApiKey): void
 
     $apiKey = substr($apiKeyHeader, 7); // Убираем "ApiKey "
 
+    echo $validApiKey.'-'.$apiKey;
+
     if ($apiKey !== $validApiKey) {
         http_response_code(403);
         echo json_encode(['status' => 'error', 'message' => 'Доступ запрещён']);
