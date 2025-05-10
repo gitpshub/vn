@@ -124,11 +124,23 @@ function handleVersion(array $env): void
 }
 
 // === Проверка API-ключа ===
+function getRequestHeaders(): array
+{
+    $headers = [];
+    foreach ($_SERVER as $key => $value) {
+        if (str_starts_with($key, 'HTTP_')) {
+            $headerKey = str_replace(['HTTP_', '_'], ['', '-'], $key);
+            $headers[$headerKey] = $value;
+        }
+    }
+    return $headers;
+}
+
 function checkApiKey(string $validApiKey): void
 {
-    $headers = getallheaders();
-    $apiKeyHeader = $headers['Authorization'] ?? '';
-   
+    $headers = getRequestHeaders()();
+    $apiKeyHeader = $headers['AUTHORIZATION'] ?? '';
+
     if (strpos($apiKeyHeader, 'ApiKey ') !== 0) {
         http_response_code(401);
         echo json_encode(['status' => 'error', 'message' => 'Не авторизован']);

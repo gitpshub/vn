@@ -78,8 +78,8 @@ const App = () => {
     fetch(`${API_URL}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `ApiKey ${API_KEY}`,
+        "Content-Type": 'application/json',
+        "Authorization": `ApiKey ${API_KEY}`,
       },
       body: JSON.stringify({
         data: { ...dataForSend },
