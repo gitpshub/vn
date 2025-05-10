@@ -79,7 +79,7 @@ const App = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `ApiKey ${API_KEY}`,
+        'Authorization': `ApiKey ${API_KEY}`,
       },
       body: JSON.stringify({
         data: { ...dataForSend },
