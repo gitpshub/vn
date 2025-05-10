@@ -6,11 +6,10 @@ header("Content-Type: application/json");
 $env = loadEnv(dirname(__DIR__, 2) . '/.env');
 
 // === Настройки из .env или дефолтные значения ===
-$validApiKey = $env['API_KEY'] ?? 'default_unsafe_key'; // Не используй в проде!
-$dataDir = $env['DATA_DIR_PATH'] ?? dirname(__DIR__) . '/data/';
+$validApiKey = $env['API_KEY'] ?? 'dev'; 
+$dataDir = $env['DATA_DIR_PATH'] ?? dirname(__DIR__, 2) . '/data/';
 $appVersion = $env['APP_VERSION'] ?? 'dev';
-$appName = $env['APP_NAME'] ?? 'Simple PHP API';
-$appDescription = $env['APP_DESCRIPTION'] ?? 'No description provided';
+$appName = $env['APP_NAME'] ?? 'Voice Notes API v.1';
 
 if (!is_dir($dataDir)) {
     mkdir($dataDir, 0777, true);
@@ -112,13 +111,6 @@ function handleVersion(array $env): void {
         'status' => 'success',
         'version' => $appVersion,
         'name' => $appName,
-        'description' => $appDescription,
-        'supported_methods' => [
-            'POST /api/save',
-            'GET /api/list',
-            'GET /api/get/{filename}',
-            'DELETE /api/delete/{filename}'
-        ],
         'timestamp' => date('c')
     ];
 
