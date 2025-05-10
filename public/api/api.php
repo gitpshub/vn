@@ -2,9 +2,9 @@
 date_default_timezone_set('Europe/Moscow');
 
 header("Content-Type: application/json; chatset=utf-8");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+// header("Access-Control-Allow-Origin: *");
+// header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+// header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 // === Загрузка настроек из .env ===
 $env = loadEnv(dirname(__DIR__, 2) . '/.env');
