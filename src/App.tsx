@@ -11,8 +11,8 @@ import Timer from './components/Timer';
 import { requestWakeLock } from './utils';
 
 const App = () => {
-  const API_KEY = '';
-  const API_URL = '';
+  const API_KEY = 'dev';
+  const API_URL = '/api/save';
 
   const saveToLocalStorage = (text: string) => {
     localStorage.setItem('finalText', text);

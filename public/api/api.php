@@ -7,7 +7,7 @@ $env = loadEnv(dirname(__DIR__, 2) . '/.env');
 
 // === Настройки из .env или дефолтные значения ===
 $validApiKey = $env['API_KEY'] ?? 'dev'; 
-$dataDir = $env['DATA_DIR_PATH'] ?? dirname(__DIR__, 2) . '/data/';
+$dataDir = $env['DATA_DIR_PATH'] ?? dirname(__DIR__, 1) . '/data/';
 $appVersion = $env['APP_VERSION'] ?? 'dev';
 $appName = $env['APP_NAME'] ?? 'Voice Notes API v.1';
 

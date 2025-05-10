@@ -5,7 +5,7 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./public:/var/www/html
+      - ./public_html:/var/www/html
     restart: unless-stopped
     command: >
       sh -c "
