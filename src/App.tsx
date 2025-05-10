@@ -13,6 +13,7 @@ import { requestWakeLock } from './utils';
 const App = () => {
   const API_KEY = 'dev';
   const API_URL = '/api/save';
+  const API_VERSION = 'v1';
 
   const saveToLocalStorage = (text: string) => {
     localStorage.setItem('finalText', text);
@@ -20,6 +21,7 @@ const App = () => {
 
   const [text, setText] = useState(localStorage.getItem('finalText') || '');
   const [interimText, setInterimText] = useState('');
+  const [sendError, setSendError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const handleFinalResult = useCallback((result: string) => {
@@ -35,8 +37,12 @@ const App = () => {
     setInterimText(result);
   }, []);
 
-  const { listening, error, startListening, stopListening } =
-    useSpeechRecognition(handleFinalResult, handleInterimResult);
+  const {
+    listening,
+    error: speechError,
+    startListening,
+    stopListening,
+  } = useSpeechRecognition(handleFinalResult, handleInterimResult);
 
   useEffect(() => {
     if (listening) {
@@ -75,17 +81,21 @@ const App = () => {
         'Content-Type': 'application/json',
         Authorization: `ApiKey ${API_KEY}`,
       },
-      body: JSON.stringify({ ...dataForSend }),
+      body: JSON.stringify({
+        data: { ...dataForSend },
+        version: `${API_VERSION}`,
+      }),
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Ошибка сети');
+          setSendError(`Статус ${response.status} - ${response.statusText}`);
+        } else {
+          console.log('Успех:', response);
         }
-        console.log('Успех:', response);
         setSubmitting(false);
       })
       .catch((error) => {
-        console.error('Ошибка отправки:', error);
+        setSendError(error);
         setSubmitting(false);
       });
   };
@@ -104,9 +114,14 @@ const App = () => {
 
   return (
     <div className='main'>
-      {error != null && <ErrorForm error={error} />}
+      {speechError != null && (
+        <ErrorForm error={speechError} type='Ошибка распознавания' />
+      )}
+      {sendError != null && (
+        <ErrorForm error={sendError} type='Ошибка отправки' />
+      )}
 
-      {error == null && (
+      {speechError == null && sendError == null && (
         <>
           <div className='buttons'>
             <button

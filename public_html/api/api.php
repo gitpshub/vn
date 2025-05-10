@@ -1,12 +1,13 @@
 <?php
+date_default_timezone_set('Europe/Moscow');
 
-header("Content-Type: application/json");
+header("Content-Type: application/json; chatset=utf-8");
 
 // === Загрузка настроек из .env ===
 $env = loadEnv(dirname(__DIR__, 2) . '/.env');
 
 // === Настройки из .env или дефолтные значения ===
-$validApiKey = $env['API_KEY'] ?? 'dev'; 
+$validApiKey = $env['API_KEY'] ?? 'dev';
 $dataDir = $env['DATA_DIR_PATH'] ?? dirname(__DIR__, 2) . '/data/';
 $appVersion = $env['APP_VERSION'] ?? 'dev';
 $appName = $env['APP_NAME'] ?? 'Voice Notes API v.1';
@@ -17,7 +18,8 @@ if (!is_dir($dataDir)) {
 
 // === Функции ===
 
-function handleSave(array $env): void {
+function handleSave(array $env): void
+{
     global $dataDir;
 
     $json = file_get_contents('php://input');
@@ -29,13 +31,13 @@ function handleSave(array $env): void {
         return;
     }
 
-    if (!isset($data['username']) || !isset($data['age'])) {
+    if (!isset($data['data']) || !isset($data['version'])) {
         http_response_code(400);
         echo json_encode(['status' => 'error', 'message' => 'Отсутствуют необходимые поля']);
         return;
     }
 
-    $data['received_at'] = date('c');
+    $data['timestamp'] = date('c');
     $filename = uniqid('', true) . '.json';
     $filepath = $dataDir . $filename;
 
@@ -52,7 +54,8 @@ function handleSave(array $env): void {
     ]);
 }
 
-function handleList(): void {
+function handleList(): void
+{
     global $dataDir;
 
     $files = array_diff(scandir($dataDir), ['.', '..']);
@@ -62,7 +65,8 @@ function handleList(): void {
     ]);
 }
 
-function handleGet(string $filename): void {
+function handleGet(string $filename): void
+{
     global $dataDir;
 
     $filepath = $dataDir . $filename;
@@ -81,7 +85,8 @@ function handleGet(string $filename): void {
     ]);
 }
 
-function handleDelete(string $filename): void {
+function handleDelete(string $filename): void
+{
     global $dataDir;
 
     $filepath = $dataDir . $filename;
@@ -104,7 +109,8 @@ function handleDelete(string $filename): void {
     }
 }
 
-function handleVersion(array $env): void {
+function handleVersion(array $env): void
+{
     global $appVersion, $appName, $appDescription;
 
     $apiInfo = [
@@ -118,7 +124,8 @@ function handleVersion(array $env): void {
 }
 
 // === Проверка API-ключа ===
-function checkApiKey(string $validApiKey): void {
+function checkApiKey(string $validApiKey): void
+{
     $headers = getallheaders();
     $apiKeyHeader = $headers['Authorization'] ?? '';
 
@@ -144,22 +151,17 @@ $method = $_SERVER['REQUEST_METHOD'];
 if ($uri === '/api/save' && $method === 'POST') {
     checkApiKey($validApiKey);
     handleSave($env);
-
 } elseif ($uri === '/api/list' && $method === 'GET') {
     checkApiKey($validApiKey);
     handleList();
-
 } elseif (preg_match('/^\/api\/get\/([\w\-\.]+\.json)$/', $uri, $matches) && $method === 'GET') {
     checkApiKey($validApiKey);
     handleGet($matches[1]);
-
 } elseif (preg_match('/^\/api\/delete\/([\w\-\.]+\.json)$/', $uri, $matches) && $method === 'DELETE') {
     checkApiKey($validApiKey);
     handleDelete($matches[1]);
-
 } elseif ($uri === '/api/version' && $method === 'GET') {
     handleVersion($env);
-
 } else {
     http_response_code(404);
     echo json_encode(['status' => 'error', 'message' => 'Эндпоинт не найден']);
@@ -167,7 +169,8 @@ if ($uri === '/api/save' && $method === 'POST') {
 
 // === Вспомогательные функции ===
 
-function loadEnv(string $filePath = ""): array {
+function loadEnv(string $filePath = ""): array
+{
     if (!file_exists($filePath)) {
         return [];
     }

@@ -6,6 +6,7 @@ services:
       - "8000:80"
     volumes:
       - ./public_html:/var/www/html
+      - ./data:/var/www/data
     restart: unless-stopped
     command: >
       sh -c "
