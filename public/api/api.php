@@ -128,9 +128,7 @@ function checkApiKey(string $validApiKey): void
 {
     $headers = getallheaders();
     $apiKeyHeader = $headers['Authorization'] ?? '';
-
-    echo '>'.$apiKeyHeader.'<';
-
+   
     if (strpos($apiKeyHeader, 'ApiKey ') !== 0) {
         http_response_code(401);
         echo json_encode(['status' => 'error', 'message' => 'Не авторизован']);
