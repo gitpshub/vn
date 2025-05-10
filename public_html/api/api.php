@@ -131,7 +131,7 @@ function getRequestHeaders(): array
 {
     $headers = [];
     foreach ($_SERVER as $key => $value) {
-        if (str_starts_with($key, 'HTTP_')) {
+        if (strncmp($key, 'HTTP_', 5) === 0) {
             $headerKey = str_replace(['HTTP_', '_'], ['', '-'], $key);
             $headers[$headerKey] = $value;
         }
