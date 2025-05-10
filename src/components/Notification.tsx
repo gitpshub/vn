@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaBackward } from 'react-icons/fa';
+import { FaRedo } from 'react-icons/fa';
 
 interface NotificationProps {
     message: string | null;
@@ -19,7 +19,7 @@ const Notification:React.FC<NotificationProps> = ({message}) => {
               backgroundColor: '#4CAF50',
             }}
           >
-            <FaBackward />
+            <FaRedo />
           </button>
         </div>
       );

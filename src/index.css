@@ -9,11 +9,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* border: 1px solid red; */
   height: 100vh;
 }
-
-/* ---------------- */
 
 #root {
   height: 95%;
@@ -48,22 +45,20 @@ body {
   font-size: 24px;
 }
 
-
-/* ---------------- */
-
-/* .pulsating-dot {
-  width: 12px;
-  height: 12px;
-  background: #4CAF50;
-  border-radius: 50%;
-  animation: pulse 1.5s infinite;
+.message {
+  color: #4CAF50;
+  font-size: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center; 
+  text-align: center;
+  gap: 20px;
 }
 
-@keyframes pulse {
-  0% { transform: scale(0.9); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(0.9); }
-} */
+.text-message {
+  font-size: 24px;
+}
 
 .animate {
   animation: pulse 1.0s infinite;
@@ -74,7 +69,6 @@ body {
   50% { transform: scale(1.0); }
   100% { transform: scale(0.9); }
 }
-
 
 button {
   color: white;
@@ -97,7 +91,6 @@ button {
 }
 
 .texts {
-  /* border: 1px solid red; */
   height: 60vh;
   display: flex;
   flex-direction: column;

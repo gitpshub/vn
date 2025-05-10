@@ -21,9 +21,11 @@ if (!is_dir($dataDir)) {
 
 // === Функции ===
 
-function handleSave(array $env): void
+function handleSave(): void
 {
     global $dataDir;
+    $headers = getRequestHeaders();
+    $userAgent = $headers['USER-AGENT'] ?? 'n/a';
 
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
@@ -41,6 +43,8 @@ function handleSave(array $env): void
     }
 
     $data['timestamp'] = date('c');
+    $data['device'] = $userAgent;
+
     $filename = uniqid('', true) . '.json';
     $filepath = $dataDir . $filename;
 
@@ -112,7 +116,7 @@ function handleDelete(string $filename): void
     }
 }
 
-function handleVersion(array $env): void
+function handleVersion(): void
 {
     global $appVersion, $appName, $appDescription;
 
@@ -165,7 +169,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 if ($uri === '/api/save' && $method === 'POST') {
     checkApiKey($validApiKey);
-    handleSave($env);
+    handleSave();
 } elseif ($uri === '/api/list' && $method === 'GET') {
     checkApiKey($validApiKey);
     handleList();
@@ -176,7 +180,7 @@ if ($uri === '/api/save' && $method === 'POST') {
     checkApiKey($validApiKey);
     handleDelete($matches[1]);
 } elseif ($uri === '/api/version' && $method === 'GET') {
-    handleVersion($env);
+    handleVersion();
 } else {
     http_response_code(404);
     echo json_encode(['status' => 'error', 'message' => 'Эндпоинт не найден']);
