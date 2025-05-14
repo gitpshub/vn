@@ -86,6 +86,8 @@ function handleGet(string $filename): void
     echo json_encode([
         'status' => 'success',
         'data' => $content['data'],
+        'version' => $content['version'],
+        'timestamp' => $content['timestamp'],
     ]);
 }
 
